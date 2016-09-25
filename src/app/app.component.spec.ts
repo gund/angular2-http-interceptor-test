@@ -2,6 +2,8 @@
 
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { HttpModule, XHRBackend } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
 
 describe('App: PortfolioSpa', () => {
   beforeEach(() => {
@@ -9,6 +11,10 @@ describe('App: PortfolioSpa', () => {
       declarations: [
         AppComponent
       ],
+      imports: [HttpModule],
+      providers: [
+        {provide: XHRBackend, useClass: MockBackend}
+      ]
     });
   });
 
