@@ -40,7 +40,7 @@ class InterceptableStore<T extends Interceptor<any, any>> implements Interceptab
     return this;
   }
 
-  clearInterceptors(interceptors?: T[]): Interceptable<T> {
+  clearInterceptors(interceptors: T[] = []): Interceptable<T> {
     if (interceptors.length > 0) {
       interceptors.forEach(i => this.removeInterceptor(i));
     } else {
