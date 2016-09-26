@@ -11,7 +11,13 @@ export class InterceptableStore<T extends Interceptor<any, any>> implements Inte
   }
 
   removeInterceptor(interceptor: T): Interceptable<T> {
-    this.store.splice(this.store.indexOf(interceptor), 1);
+    const idx = this.store.indexOf(interceptor);
+
+    if (idx === -1) {
+      return this;
+    }
+
+    this.store.splice(idx, 1);
     return this;
   }
 
