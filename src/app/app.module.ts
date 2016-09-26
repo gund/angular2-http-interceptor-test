@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { HTTP_INTERCEPTOR_PROVIDERS } from './core/http';
+import { HTTP_INTERCEPTOR_PROVIDER } from './core/http';
 
 @NgModule({
   declarations: [
@@ -15,7 +15,7 @@ import { HTTP_INTERCEPTOR_PROVIDERS } from './core/http';
     FormsModule,
     HttpModule
   ],
-  providers: [...HTTP_INTERCEPTOR_PROVIDERS],
+  providers: [...HTTP_INTERCEPTOR_PROVIDER],
   bootstrap: [AppComponent]
 })
 export class AppModule {

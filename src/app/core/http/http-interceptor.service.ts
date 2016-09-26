@@ -1,53 +1,35 @@
-import { Injectable, Inject } from '@angular/core';
-import { Http } from '@angular/http';
+import { Injectable } from '@angular/core';
 import { HttpInterceptor, RequestInterceptor, ResponseInterceptor } from './http-interceptor';
-import { Interceptable, Interceptor } from './interceptable';
-import { InterceptableHttp } from './interceptable-http';
+import { Interceptable } from './interceptable';
+import { InterceptableStore } from './interceptable-store';
+import { Observable } from 'rxjs';
+import { Response } from '@angular/http';
 
 @Injectable()
 export class HttpInterceptorService implements HttpInterceptor {
 
-  private _preInterceptor = new InterceptableStore<RequestInterceptor>(this.http._interceptors.pre);
-  private _postInterceptor = new InterceptableStore<ResponseInterceptor>(this.http._interceptors.post);
+  private _requestInterceptors: RequestInterceptor[] = [];
+  private _responseInterceptors: ResponseInterceptor[] = [];
+  private _requestStore = new InterceptableStore<RequestInterceptor>(this._requestInterceptors);
+  private _responseStore = new InterceptableStore<ResponseInterceptor>(this._responseInterceptors);
 
-  constructor(@Inject(Http) private http: InterceptableHttp) {
+  constructor() {
   }
 
   request(): Interceptable<RequestInterceptor> {
-    return this._preInterceptor;
+    return this._requestStore;
   }
 
   response(): Interceptable<ResponseInterceptor> {
-    return this._postInterceptor;
+    return this._responseStore;
   }
 
-}
-
-export const HttpInterceptorProviders = [HttpInterceptorService];
-
-class InterceptableStore<T extends Interceptor<any, any>> implements Interceptable<T> {
-
-  constructor(private store: T[]) {
+  _interceptRequest(method: string, data: any[]): any[] {
+    return this._requestInterceptors.reduce((d, i) => i(d, method), data);
   }
 
-  addInterceptor(interceptor: T): Interceptable<T> {
-    this.store.push(interceptor);
-    return this;
-  }
-
-  removeInterceptor(interceptor: T): Interceptable<T> {
-    this.store.splice(this.store.indexOf(interceptor), 1);
-    return this;
-  }
-
-  clearInterceptors(interceptors: T[] = []): Interceptable<T> {
-    if (interceptors.length > 0) {
-      interceptors.forEach(i => this.removeInterceptor(i));
-    } else {
-      this.store.splice(0);
-    }
-
-    return this;
+  _interceptResponse(method: string, response: Observable<Response>): Observable<Response> {
+    return this._responseInterceptors.reduce((o, i) => o.flatMap(_ => i(o, method)), response);
   }
 
 }

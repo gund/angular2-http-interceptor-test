@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
 import 'rxjs';
-import { HttpInterceptorService } from './core/http/http-interceptor.service';
+import { HttpInterceptorService, InterceptableHttp } from './core/http';
 
 @Component({
   selector: 'app-root',
@@ -11,14 +10,15 @@ import { HttpInterceptorService } from './core/http/http-interceptor.service';
 export class AppComponent implements OnInit {
   title = 'app works!';
 
-  constructor(private http: Http, httpInterceptor: HttpInterceptorService) {
-    httpInterceptor.request().addInterceptor(data => {
-      console.log(data);
-      return data;
-    });
+  constructor(private http: InterceptableHttp, httpInterceptor: HttpInterceptorService) {
+    httpInterceptor.request()
+      .addInterceptor((data, method) => {
+        console.log(method, data);
+        return data;
+      });
 
-    httpInterceptor.response().addInterceptor(res => {
-      res.subscribe(r => console.log(r));
+    httpInterceptor.response().addInterceptor((res, method) => {
+      res.subscribe(r => console.log(method, r));
       return res;
     });
   }
@@ -26,6 +26,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.http.get('/')
       .map(r => r.text())
-      .subscribe(res => console.log(res));
+      .subscribe(console.log);
   }
 }

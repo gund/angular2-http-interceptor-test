@@ -1,14 +1,21 @@
-import { Http, Response } from '@angular/http';
-import { RequestInterceptor, ResponseInterceptor, HttpRequestData } from './http-interceptor';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Http, RequestOptions, ConnectionBackend } from '@angular/http';
+import { InterceptableHttpProxyService } from './interceptable-http-proxy.service';
 
-export interface InterceptableHttp extends Http {
-  _interceptors: PrePostInterceptors;
-  _interceptRequest(data: HttpRequestData): HttpRequestData;
-  _interceptResponse(response: Observable<Response>): Observable<Response>;
+@Injectable()
+export class InterceptableHttp extends Http {
+
+  constructor(_backend: ConnectionBackend, _defaultOptions: RequestOptions) {
+    super(_backend, _defaultOptions);
+  }
+
 }
 
-export interface PrePostInterceptors {
-  pre: RequestInterceptor[];
-  post: ResponseInterceptor[];
-}
+// noinspection JSUnusedGlobalSymbols
+export const InterceptableHttpProviders = [
+  {
+    provide: InterceptableHttp,
+    useFactory: proxy => proxy,
+    deps: [InterceptableHttpProxyService]
+  }
+];
