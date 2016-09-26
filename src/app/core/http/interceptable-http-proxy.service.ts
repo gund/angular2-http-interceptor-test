@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, XHRBackend, RequestOptions } from '@angular/http';
 import { HttpInterceptorService } from './http-interceptor.service';
 import { Observable } from 'rxjs';
+import { identityFactory } from './util';
 
 @Injectable()
 export class InterceptableHttpProxyService implements ProxyHandler<any> {
@@ -31,11 +32,21 @@ export class InterceptableHttpProxyService implements ProxyHandler<any> {
   }
 }
 
-// noinspection JSUnusedGlobalSymbols
 export const InterceptableHttpProxyProviders = [
   {
+    provide: Http,
+    useFactory: (backend, options, interceptor) =>
+      new Proxy(() => null, new InterceptableHttpProxyService(new Http(backend, options), interceptor)),
+    deps: [XHRBackend, RequestOptions, HttpInterceptorService]
+  },
+  identityFactory(InterceptableHttpProxyService, Http)
+];
+
+export const InterceptableHttpProxyNoOverrideProviders = [
+  {
     provide: InterceptableHttpProxyService,
-    useFactory: (http, interceptor) => new Proxy(() => null, new InterceptableHttpProxyService(http, interceptor)),
+    useFactory: (http, interceptor) =>
+      new Proxy(() => null, new InterceptableHttpProxyService(http, interceptor)),
     deps: [Http, HttpInterceptorService]
   }
 ];

@@ -1,10 +1,21 @@
 import { HttpInterceptorService } from './http-interceptor.service';
-import { InterceptableHttpProxyProviders } from './interceptable-http-proxy.service';
+import {
+  InterceptableHttpProxyProviders,
+  InterceptableHttpProxyNoOverrideProviders
+} from './interceptable-http-proxy.service';
 import { InterceptableHttpProviders } from './interceptable-http';
 
-// noinspection JSUnusedGlobalSymbols
-export const HTTP_INTERCEPTOR_PROVIDER = [
+const SharedProviders = [
   HttpInterceptorService,
-  ...InterceptableHttpProxyProviders,
   ...InterceptableHttpProviders
+];
+
+export const HTTP_INTERCEPTOR_PROVIDER = [
+  ...SharedProviders,
+  ...InterceptableHttpProxyProviders
+];
+
+export const HTTP_INTERCEPTOR_NO_OVERRIDE_PROVIDER = [
+  ...SharedProviders,
+  ...InterceptableHttpProxyNoOverrideProviders
 ];
