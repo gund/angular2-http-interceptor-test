@@ -4,6 +4,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { HttpModule, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
+import { HTTP_INTERCEPTOR_PROVIDER } from './core/http/providers';
 
 describe('App: PortfolioSpa', () => {
   beforeEach(() => {
@@ -13,7 +14,8 @@ describe('App: PortfolioSpa', () => {
       ],
       imports: [HttpModule],
       providers: [
-        {provide: XHRBackend, useClass: MockBackend}
+        {provide: XHRBackend, useClass: MockBackend},
+        ...HTTP_INTERCEPTOR_PROVIDER
       ]
     });
   });

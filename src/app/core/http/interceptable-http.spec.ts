@@ -3,11 +3,17 @@
 import { TestBed, async, inject } from '@angular/core/testing';
 import { InterceptableHttp } from './interceptable-http';
 import { HTTP_INTERCEPTOR_PROVIDER } from './providers';
+import { HttpModule, XHRBackend } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
 
 describe('Service: InterceptableHttp', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...HTTP_INTERCEPTOR_PROVIDER]
+      imports: [HttpModule],
+      providers: [
+        {provide: XHRBackend, useClass: MockBackend},
+        ...HTTP_INTERCEPTOR_PROVIDER
+      ]
     });
   });
 
