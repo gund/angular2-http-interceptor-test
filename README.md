@@ -5,7 +5,7 @@
 ## Usage
 
 To use it you must first declare providers in your `@NgModule`.  
-You 2 options:  
+You have 2 options:  
 1. Register `InterceptableHttp` AND override original `Http` service so
 that all your requests will be intercepted
 2. Register ONLY `InterceptableHttp` and keep original `Http` service so
