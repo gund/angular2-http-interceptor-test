@@ -1,6 +1,19 @@
+import { Injectable } from '@angular/core';
 import { Interceptable, Interceptor } from './interceptable';
 
-export class InterceptableStore<T extends Interceptor<any, any>> implements Interceptable<T> {
+type AnyInterceptor = Interceptor<any, any>;
+
+@Injectable()
+export class InterceptableStoreFactory {
+
+  // noinspection JSMethodCanBeStatic
+  createStore<D extends AnyInterceptor>(store: D[]) {
+    return new InterceptableStore<D>(store);
+  }
+
+}
+
+export class InterceptableStore<T extends AnyInterceptor> implements Interceptable<T> {
 
   constructor(private store: T[] = []) {
   }

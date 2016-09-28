@@ -4,8 +4,10 @@ import {
   InterceptableHttpProxyNoOverrideProviders
 } from './interceptable-http-proxy.service';
 import { InterceptableHttpProviders } from './interceptable-http';
+import { InterceptableStoreFactory } from './interceptable-store';
 
 const SharedProviders = [
+  InterceptableStoreFactory,
   HttpInterceptorService,
   ...InterceptableHttpProviders
 ];

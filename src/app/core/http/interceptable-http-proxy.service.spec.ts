@@ -5,6 +5,7 @@ import { InterceptableHttpProxyService } from './interceptable-http-proxy.servic
 import { HttpModule, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { HttpInterceptorService } from './http-interceptor.service';
+import { InterceptableStoreFactory } from './interceptable-store';
 
 describe('Service: InterceptableHttpProxy', () => {
   beforeEach(() => {
@@ -12,6 +13,7 @@ describe('Service: InterceptableHttpProxy', () => {
       imports: [HttpModule],
       providers: [
         {provide: XHRBackend, useClass: MockBackend},
+        InterceptableStoreFactory,
         HttpInterceptorService,
         InterceptableHttpProxyService
       ]

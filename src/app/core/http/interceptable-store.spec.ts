@@ -1,6 +1,6 @@
 /* tslint:disable:no-unused-variable */
 
-import { InterceptableStore } from './interceptable-store';
+import { InterceptableStore, InterceptableStoreFactory } from './interceptable-store';
 import any = jasmine.any;
 
 describe('InterceptableStore', () => {
@@ -57,6 +57,20 @@ describe('InterceptableStore', () => {
       expect(store.clearInterceptors([1, 3])).toBe(store);
       expect(store.removeInterceptor).toHaveBeenCalledTimes(2);
       expect(mockStore).toEqual([2]);
+    });
+  });
+
+  describe('InterceptableStoreFactory', () => {
+    describe('createStore() method', () => {
+      it('should create new InterceptableStore with store provided', () => {
+        const storeFactory = new InterceptableStoreFactory();
+        const store = storeFactory.createStore<any>(mockStore);
+
+        expect(store).toEqual(jasmine.any(InterceptableStore));
+
+        store.addInterceptor(1);
+        expect(mockStore).toEqual([1]);
+      });
     });
   });
 });
