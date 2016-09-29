@@ -1,7 +1,6 @@
 /* tslint:disable:no-unused-variable */
 
 import { InterceptableStore, InterceptableStoreFactory } from './interceptable-store';
-import any = jasmine.any;
 
 describe('InterceptableStore', () => {
   let mockStore: any[];
