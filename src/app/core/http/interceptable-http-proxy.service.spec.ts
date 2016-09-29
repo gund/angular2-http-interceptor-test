@@ -1,26 +1,64 @@
 /* tslint:disable:no-unused-variable */
 
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
 import { InterceptableHttpProxyService } from './interceptable-http-proxy.service';
-import { HttpModule, XHRBackend } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
+import { HttpModule, Http } from '@angular/http';
 import { HttpInterceptorService } from './http-interceptor.service';
-import { InterceptableStoreFactory } from './interceptable-store';
+import { Observable } from 'rxjs';
 
 describe('Service: InterceptableHttpProxy', () => {
+  let service: InterceptableHttpProxyService;
+  const HttpMock = {testMethod: null}, HttpInterceptorServiceMock = {_interceptRequest: null, _interceptResponse: null};
+
+  beforeEach(() => {
+    HttpMock.testMethod = jasmine.createSpy('testMethod');
+    HttpInterceptorServiceMock._interceptRequest = jasmine.createSpy('_interceptRequest');
+    HttpInterceptorServiceMock._interceptResponse = jasmine.createSpy('_interceptResponse');
+  });
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpModule],
       providers: [
-        {provide: XHRBackend, useClass: MockBackend},
-        InterceptableStoreFactory,
-        HttpInterceptorService,
+        {provide: Http, useValue: HttpMock},
+        {provide: HttpInterceptorService, useValue: HttpInterceptorServiceMock},
         InterceptableHttpProxyService
       ]
     });
   });
 
-  it('should exist', inject([InterceptableHttpProxyService], (service: InterceptableHttpProxyService) => {
-    expect(service).toBeTruthy();
-  }));
+  beforeEach(inject([InterceptableHttpProxyService], s => service = s));
+
+  it('should exist', () => expect(service).toBeTruthy());
+
+  describe('get() method', () => {
+    it('should return receiver from args', () => expect(service.get(null, null, 'target')).toBe('target'));
+  });
+
+  describe('apply() method', () => {
+    it('should call _interceptRequest() on service and method on Http and _interceptResponse on service', () => {
+      HttpMock.testMethod.and.returnValue('response');
+      HttpInterceptorServiceMock._interceptRequest.and.returnValue(['data modified']);
+      HttpInterceptorServiceMock._interceptResponse.and.returnValue('response modified');
+
+      service.get(null, 'testMethod', null);
+      const res = service.apply(null, null, ['data']);
+
+      expect(HttpInterceptorServiceMock._interceptRequest).toHaveBeenCalledWith('testMethod', ['data']);
+      expect(HttpMock.testMethod).toHaveBeenCalledWith('data modified');
+      expect(HttpInterceptorServiceMock._interceptResponse).toHaveBeenCalledWith('testMethod', 'response');
+      expect(res).toBe('response modified');
+    });
+
+    it('should call _interceptRequest() and cancel request if it returns false and return empty observable', () => {
+      HttpInterceptorServiceMock._interceptRequest.and.returnValue(false);
+
+      service.get(null, 'testMethod', null);
+      const res = service.apply(null, null, ['data']);
+
+      expect(HttpInterceptorServiceMock._interceptRequest).toHaveBeenCalledWith('testMethod', ['data']);
+      expect(HttpMock.testMethod).not.toHaveBeenCalled();
+      expect(res).toEqual(Observable.empty());
+    });
+  });
 });
