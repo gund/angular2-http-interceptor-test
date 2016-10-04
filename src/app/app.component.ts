@@ -17,6 +17,11 @@ export class AppComponent implements OnInit {
       return data;
     });
 
+    httpInterceptor.request('/my-url').addInterceptor(data => {
+      console.log('This wong get called');
+      return data;
+    });
+
     httpInterceptor.response().addInterceptor((res, method) => {
       res.subscribe(r => console.log(method, r));
       return res;
