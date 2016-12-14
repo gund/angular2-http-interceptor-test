@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
-import { HTTP_INTERCEPTOR_PROVIDER } from 'ng2-http-interceptor';
+import { HttpInterceptorModule } from 'ng2-http-interceptor';
 
 @NgModule({
   declarations: [
@@ -12,9 +12,9 @@ import { HTTP_INTERCEPTOR_PROVIDER } from 'ng2-http-interceptor';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    HttpInterceptorModule
   ],
-  providers: [...HTTP_INTERCEPTOR_PROVIDER],
   bootstrap: [AppComponent]
 })
 export class AppModule {
