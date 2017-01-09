@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
-import { HttpInterceptorModule } from 'ng2-http-interceptor';
+import { HttpInterceptorModule } from 'ng-http-interceptor';
 
 @NgModule({
   declarations: [

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import 'rxjs';
 import { Http } from '@angular/http';
-import { HttpInterceptorService } from 'ng2-http-interceptor';
+import { HttpInterceptorService } from 'ng-http-interceptor';
 
 @Component({
   selector: 'app-root',
