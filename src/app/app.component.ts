@@ -23,8 +23,7 @@ export class AppComponent implements OnInit {
     });
 
     httpInterceptor.response().addInterceptor((res, method) => {
-      res.subscribe(r => console.log(method, r));
-      return res;
+      return res.do(r => console.log(method, r));
     });
   }
 
