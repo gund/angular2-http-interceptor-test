@@ -1,8 +1,8 @@
 # Angular2 Http Interceptor Demo
 
-> This is demo built with [ng2-http-interceptor](https://github.com/gund/ng2-http-interceptor) and angular-cli
+> This is demo built with [ng-http-interceptor](https://github.com/gund/ng-http-interceptor) and angular-cli
 
-Here you can check and test how `ng2-http-interceptor` library works
+Here you can check and test how `ng-http-interceptor` library works
 and how to use it.
 
 ## Development server
